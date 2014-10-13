@@ -74,60 +74,6 @@ function hud_all(core,hud,size,no,option)
 	end
 end
 
-function cont_def2(core,hud,target,size,rock)
-	--core:親チップ名 hud:hudチップ名 size:大きさ指定
-	--使用例(core,hud,(x,y,z),size)
-	dstx,dsty,dstz=local3DPos2(x,y,z,core)
-	dstx2,dsty2,dstz2=local3DPos2(_X(hud),_Y(hud),_Z(hud),core)
-	dst2=LEN(dstx2,dsty2,dstz2)
-	dst1=LEN(dstx,dsty,dstz)
-	dx=(dst2/dst1)*dstx-dstx2
-	dy=(dst2/dst1)*dsty-dsty2
-	container(core,hud,size,0,dx,dy,rock)
-end
-
-function container(chip2,chip1,isize,col,x,y,rock,def)
-	local x1,y1,z1=local3DPos2(_X(chip1),_Y(chip1),_Z(chip1),chip2)
-	_SETCOLOR(tonumber("FF00",16))
-	rock2=rock2 or {3,0}
-	x2=x2 or 0 y2=y2 or 0
-	if rock==1 then
-		if rock2[2]==1 then
-			_SETCOLOR(tonumber("FF0000",16))
-		end
-		if rock2[1]==3 then
-			x2=x-def[1]
-			y2=y-def[2]
-			rock2[1]=1
-		end
-		if rock2[1]==1 then
-			x2=hikeolib.ang(x2,0,0.05)
-			y2=hikeolib.ang(y2,0,0.05)
-			
-			if x2==0 and y2==0 then rock2[2]=1 end
-			localmove3D(x1-x2+x+isize,y1-y2+y,z1,chip2)
-			for i=0,360,30 do
-				k=math.rad(i)
-				localline3D(x1-x2+x+isize*math.cos(k),y1-y2+y+isize*math.sin(k),z1,chip2)
-			end
-			--[[localline3D(x1-x2+x-isize,y1-y2+y,z1,chip2)
-			localline3D(x1-x2+x,y1-y2+y-isize,z1,chip2)
-			localline3D(x1-x2+x+isize,y1-y2+y,z1,chip2)
-			localline3D(x1-x2+x,y1-y2+y+isize,z1,chip2)]]
-		end
-	else
-		rock2[1]=3
-		rock2[2]=0
-		x2=0
-		y2=0
-	end
-	localmove3D(x1+x+isize,y1+y+isize,z1,chip2)
-	localline3D(x1+x-isize,y1+y+isize,z1,chip2)
-	localline3D(x1+x-isize,y1+y-isize,z1,chip2)
-	localline3D(x1+x+isize,y1+y-isize,z1,chip2)
-	localline3D(x1+x+isize,y1+y+isize,z1,chip2)
-end
-
 function basicmoniter2D(core,size,col)
 	core=core or 0
 	size=size/20 or 0.05
@@ -417,7 +363,7 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 			_SETCOLOR(tonumber(col,16))
 		end
 		
-		--速度計 spirytus入れてない限り不要だが9999以上は表示できない
+		--速度計
 		local vz=math.floor(math.abs(_VZ(core)*3.6))
 		if _VZ()>2 then
 			_SETCOLOR(tonumber("FF0000",16))
@@ -562,9 +508,65 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 		localline3D(dx-10*size+size2*1.2,dy+size2*0.8,z1,core)
 		localline3D(dx-10*size+size2*1.2,dy-size2*0.8,z1,core)
 		localline3D(dx-10*size-size2*3,dy-size2*0.8,z1,core)
-		localline3D(dx-10*size-size2*3,dy+size2*0.8,z1,core)		localline3D(dx-10*size-size2*2,dy+size2*0.8,z1,core)
+		localline3D(dx-10*size-size2*3,dy+size2*0.8,z1,core)
+		localline3D(dx-10*size-size2*2,dy+size2*0.8,z1,core)
 	end
 end
+
+function cont_def2(core,hud,target,size,rock)
+	--core:親チップ名 hud:hudチップ名 size:大きさ指定
+	--使用例(core,hud,(x,y,z),size)
+	dstx,dsty,dstz=local3DPos2(x,y,z,core)
+	dstx2,dsty2,dstz2=local3DPos2(_X(hud),_Y(hud),_Z(hud),core)
+	dst2=LEN(dstx2,dsty2,dstz2)
+	dst1=LEN(dstx,dsty,dstz)
+	dx=(dst2/dst1)*dstx-dstx2
+	dy=(dst2/dst1)*dsty-dsty2
+	container(core,hud,size,0,dx,dy,rock)
+end
+
+function container(chip2,chip1,isize,col,x,y,rock,def)
+	local x1,y1,z1=local3DPos2(_X(chip1),_Y(chip1),_Z(chip1),chip2)
+	_SETCOLOR(tonumber("FF00",16))
+	rock2=rock2 or {3,0}
+	x2=x2 or 0 y2=y2 or 0
+	if rock==1 then
+		if rock2[2]==1 then
+			_SETCOLOR(tonumber("FF0000",16))
+		end
+		if rock2[1]==3 then
+			x2=x-def[1]
+			y2=y-def[2]
+			rock2[1]=1
+		end
+		if rock2[1]==1 then
+			x2=hikeolib.ang(x2,0,0.05)
+			y2=hikeolib.ang(y2,0,0.05)
+			
+			if x2==0 and y2==0 then rock2[2]=1 end
+			localmove3D(x1-x2+x+isize,y1-y2+y,z1,chip2)
+			for i=0,360,30 do
+				k=math.rad(i)
+				localline3D(x1-x2+x+isize*math.cos(k),y1-y2+y+isize*math.sin(k),z1,chip2)
+			end
+			--[[localline3D(x1-x2+x-isize,y1-y2+y,z1,chip2)
+			localline3D(x1-x2+x,y1-y2+y-isize,z1,chip2)
+			localline3D(x1-x2+x+isize,y1-y2+y,z1,chip2)
+			localline3D(x1-x2+x,y1-y2+y+isize,z1,chip2)]]
+		end
+	else
+		rock2[1]=3
+		rock2[2]=0
+		x2=0
+		y2=0
+	end
+	localmove3D(x1+x+isize,y1+y+isize,z1,chip2)
+	localline3D(x1+x-isize,y1+y+isize,z1,chip2)
+	localline3D(x1+x-isize,y1+y-isize,z1,chip2)
+	localline3D(x1+x+isize,y1+y-isize,z1,chip2)
+	localline3D(x1+x+isize,y1+y+isize,z1,chip2)
+end
+
 
 function circle(x,y,r)
 	step=18
@@ -572,50 +574,4 @@ function circle(x,y,r)
 		_MOVE2D(x+r*math.cos(math.rad(i)),y+r*math.sin(math.rad(i)))
 		_LINE2D(x+r*math.cos(math.rad(i+step)),y+r*math.sin(math.rad(i+step)))
 	end
-end
-
-function power(a,b)
-	_SETCOLOR(65280)
-	_MOVE2D(-0.4,-0.3)
-	_LINE2D(-0.4,0.3)
-
-	_MOVE2D(-0.38,-0.3)
-	_LINE2D(-0.42,-0.3)
-
-	_MOVE2D(-0.38,0.3)
-	_LINE2D(-0.42,0.3)
-	
-	if b>0 then
-		text(-0.38,0.34)
-	end
-
-	for i=0,0.016,0.001 do
-		_MOVE2D(-0.408+i,(a/50-1)*0.3)
-		_LINE2D(-0.408+i,-0.3)
-	end
-
-end
-function text(x,y)
-	_MOVE2D(0.045+x,0.025+y) _LINE2D(-0.045+x,0.025+y)
-	_MOVE2D(-0.045+x,0.025+y) _LINE2D(-0.045+x,-0.025+y)
-	_MOVE2D(0.045+x,0.025+y) _LINE2D(0.045+x,-0.025+y)
-	_MOVE2D(0.045+x,-0.025+y) _LINE2D(-0.045+x,-0.025+y)
-	_MOVE2D(-0.03+x,0.02+y) _LINE2D(-0.04+x,-0.02+y)
-	_MOVE2D(-0.03+x,0.02+y) _LINE2D(-0.02+x,-0.02+y)
-	_MOVE2D(-0.03+x,-0.01+y) _LINE2D(-0.04+x,-0.01+y)
-	_MOVE2D(-0.01+x,-0.02+y) _LINE2D(0.01+x,0.02+y)
-	_MOVE2D(0.02+x,0.02+y) _LINE2D(0.02+x,-0.02+y)
-	for i=-1,1 do
-		_MOVE2D(0.02+x,0.02*i+y)
-		_LINE2D(0.035+x,0.02*i+y)
-	end
-	_MOVE2D(0.035+x,0.02+y)
-	_LINE2D(0.04+x,0.01+y)
-	_MOVE2D(0.035+x,y)
-	_LINE2D(0.04+x,0.01+y)
-
-	_MOVE2D(0.035+x,-0.02+y)
-	_LINE2D(0.04+x,-0.01+y)
-	_MOVE2D(0.035+x,y)
-	_LINE2D(0.04+x,-0.01+y)
 end
