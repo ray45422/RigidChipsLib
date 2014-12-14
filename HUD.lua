@@ -141,25 +141,6 @@ function basicmoniter2D(core,size,col)
 				ey=ey1-360
 			end
 			k=(i+ey1)*-size/2
-			--[[if i<=0 then
-				ii=i*-1
-			else
-				ii=i-360
-			end
-			if ii~=0 then
-				i1=math.floor(math.abs(ii)/100)
-				i2=math.floor(math.abs(ii)/10)-i1*10
-			else
-				i1=3
-				i2=6
-			end
-			if i1~=0 then
-				seg7[i1](k-size*0.6,11.6*size,size*0.6)
-			end
-			if i1>=1 or i2~=0 then
-				seg7[i2](k,11.6*size,size*0.6)
-			end
-			seg7[0](k+size*0.6,11.6*size,size*0.6)]]
 			if math.mod(i,90)==0 then tmp=0.4*size
 			else tmp=0 end
 			if i==0 then _SETCOLOR(tonumber("FF0000",16)) end
@@ -283,7 +264,7 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 		--–¢—ˆ—\‘ª
 		local vx=_VX(core)/math.abs(_VZ())*20 local vy=_VY(core)/math.abs(_VZ())*20
 		if math.abs(vx)<10 and math.abs(vy)<5 then
-				r=0.3
+			r=0.3
 			localmove3D(vx*size,dy+r*size+vy*size,z1,core)
 			for i=0,360,45 do
 				ang=math.rad(i)
@@ -332,28 +313,6 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 		for i=-180,180,10 do
 			if i+ey1>=-10 and i+ey1<=10 then
 				k=(i+ey1)*-size/2
-				--[[if ey1<=0 then
-					ey=ey1-360
-				end
-				if i<=0 then
-					ii=i+360
-				else
-					ii=i*-1
-				end			
-				if ii~=0 then
-					i1=math.floor(math.abs(ii)/100)
-					i2=math.floor(math.abs(ii)/10)-i1*10
-				else
-					i1=3
-					i2=6
-				end
-				if i1~=0 then
-					seg7_3D[i1](dx+k+size*0.6,dy+4.4*size,z1,core,size*0.6)
-				end
-				if i1>=1 or i2~=0 then
-					seg7_3D[i2](dx+k,dy+4.4*size,z1,core,size*0.6)
-				end
-				seg7_3D[0](dx+k-size*0.6,dy+4.4*size,z1,core,size*0.6)]]
 				if math.mod(i,90)==0 then tmp=0.4*size
 				else tmp=0 end
 				if i==0 then _SETCOLOR(tonumber("FF0000",16)) end
@@ -497,7 +456,6 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 				seg7_3D[i3](dx-10*size-size2,dy+size2/2,z1,core,size2)
 			end
 			seg7_3D[i4](dx-10*size-2*size2,dy+size2/2,z1,core,size2)
-
 		else
 			_SETCOLOR(tonumber("FF0000",16))
 			localmove3D(dx-10*size-size2*2,dy,z1,core)
