@@ -371,10 +371,10 @@ function basicmoniter3D(core,hud,size,col,x2,y2,option)
 			string3D("GEAR",dx-8*size,dy-size,z1,core,size,col)
 		end
 	elseif option[1]==1 then
-		localmove3D(dx+0.5*size,dy,z1,core)
+		--[[localmove3D(dx+0.5*size,dy,z1,core)
 		localline3D(dx-0.5*size,dy,z1,core)
 		localmove3D(dx,dy+0.5*size,z1,core)
-		localline3D(dx,dy-0.5*size,z1,core)
+		localline3D(dx,dy-0.5*size,z1,core)]]
 		
 		localmove3D(dx+7.5*size,dy+8*size,z1,core)
 		localline3D(dx+8*size,dy+8*size,z1,core)
@@ -523,6 +523,39 @@ function container(chip2,chip1,isize,col,x,y,rock,def)
 	localline3D(x1+x-isize,y1+y-isize,z1,chip2)
 	localline3D(x1+x+isize,y1+y-isize,z1,chip2)
 	localline3D(x1+x+isize,y1+y+isize,z1,chip2)
+end
+
+function reticle(chip2,chip1,isize,col,x,y,range,def)
+	local x1,y1,z1=local3DPos2(_X(chip1),_Y(chip1),_Z(chip1),chip2)
+	_SETCOLOR(tonumber("FF00",16))
+	rock2=rock2 or {3,0}
+	x2=x2 or 0 y2=y2 or 0
+	def=def or {0,0}
+	--[[localmove3D(x1+x+isize,y1+y+isize,z1,chip2)
+	localline3D(x1+x-isize,y1+y+isize,z1,chip2)
+	localline3D(x1+x-isize,y1+y-isize,z1,chip2)
+	localline3D(x1+x+isize,y1+y-isize,z1,chip2)
+	localline3D(x1+x+isize,y1+y+isize,z1,chip2)
+	localmove3D(x1-x2+x+isize,y1-y2+y,z1,chip2)]]
+	localmove3D(x1+x,y1+y+isize*0.5,z1,chip2)
+	localline3D(x1+x,y1+y-isize*0.5,z1,chip2)
+	localmove3D(x1+x+isize*0.5,y1+y,z1,chip2)
+	localline3D(x1+x-isize*0.5,y1+y,z1,chip2)
+	localmove3D(x1+x+2*isize+def[1],y1+y+def[2],z1,chip2)
+	for i=0,360,30 do
+		local k=math.rad(i)
+		localline3D(x1+x+2*isize*math.cos(k)+def[1],y1+y+2*isize*math.sin(k)+def[2],z1,chip2)
+	end
+	for i=0,360,30 do
+		local k=math.rad(i)
+		localmove3D(x1+x+2*isize*math.cos(k)+def[1],y1+y+2*isize*math.sin(k)+def[2],z1,chip2)
+		localline3D(x1+x+2.4*isize*math.cos(k)+def[1],y1+y+2.4*isize*math.sin(k)+def[2],z1,chip2)
+	end
+	localmove3D(x1+x+def[1],y1+y+1.6*isize+def[2],z1,chip2)
+	for i=0,360*range,30 do
+		local k=math.rad(i)
+		localline3D(x1+x-1.6*isize*math.sin(k)+def[1],y1+y+1.6*isize*math.cos(k)+def[2],z1,chip2)
+	end
 end
 
 

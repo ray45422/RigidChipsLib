@@ -69,7 +69,7 @@ function follow2(core,tar,mag,mode) --core:   tar:ëŒè€ç¿ïW mag:î{ó¶ follow2(core
 	local x=_X(core)-tar[1] local y=_Y(core)-tar[2] local z=_Z(core)-tar[3]
 	local lx,ly,lz=local3DPos2(tar[1],tar[2],tar[3],core)
 	local len=LEN(x,y,z)
-	lz=lz+_VZ(core)/_BASE()
+	--lz=lz+_VZ(core)/_BASE()
 	if lx==0 then lx=1 end
 	if ly==0 then ly=1 end
 	if lz==0 then lz=1 end
