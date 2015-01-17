@@ -7,22 +7,22 @@
 	isize:コンテナのサイズ
 	col:コンテナの色
 ]]
-hudData={rock=0,x=0,y=0}
+hudData={rock=0,x=0,y=0,tn=0}
 function hud_all(core,hud,size,no,option)
 	--core:親チップ名 hud:hudチップ名 size:大きさ指定 no:選択中のターゲット x,y:位置調整(省略可）
-	--使用例(core,hud,size,no,{x=x,y=y,col=col})
+	--使用例(core,hud,size,no,{x=x,y=y,col=col,range=1500})
 	option=option or {}
 	local col=option.col or "FF00"
 	_SETCOLOR(tonumber(col,16))
 	local x=option.x or 0
 	local y=option.y or 0
+	local range=option.range or 500
 	p_table=p_date()
 	local dx={} local dy={} local dz={}
 	local dx2={} local dy2={} local dz2={}
 	local dst1={} local dst2={}
 	local dx3={} local dy3={} local dz3={}
 	for i=0,_PLAYERS()-1 do
-		hudData[i]=hudData[i] or {rock=0,x=0,y=0}
 		if i~=hikeolib.netown() then
 			dx[i],dy[i],dz[i]=local3DPos2(p_table[i].x,p_table[i].y,p_table[i].z,core)
 			dx2[i],dy2[i],dz2[i]=local3DPos2(_X(hud),_Y(hud),_Z(hud),core)
@@ -34,15 +34,13 @@ function hud_all(core,hud,size,no,option)
 			if dz[i]<=0 then
 				local len=p_table[i].len
 				if math.abs(dx[i])<=0.3 and math.abs(dy[i])<=0.3 then
-					if i==no and p_table[i].len<=800 then
-						if hudData.rock~=2 then
-							hudData.rock=1
-						end
-					else
-						hudData.rock=0
+					local rock=0
+					if i==no and p_table[i].len<=range then
+						rock=1
 					end
-					container(core,hud,size,col,dx[i],dy[i],hudData.rock,{x,y})
+					container(core,hud,size,col,dx[i],dy[i],rock,{x,y})
 					--距離描画 名前描画
+					_SETCOLOR(tonumber("FF00",16))
 					if len<10000 then
 						local i1=math.floor(math.abs(len)/1000)
 						local i2=math.floor(math.abs(len)/100)-i1*10
@@ -62,8 +60,10 @@ function hud_all(core,hud,size,no,option)
 							string3D(_PLAYERNAME(i),dx3[i]+dx[i]-size*0.5,dy3[i]+dy[i]-size*1.2,dz3[i],core,size*0.8,col)
 						end
 					end
-				else
+				elseif i==no then
 					hudData.rock=0
+					hudData.x=0
+					hudData.y=0
 				end
 			end
 			if (dz[i]>=0 or math.abs(dx[i])>=0.3 or math.abs(dy[i])>=0.3) and no==i then
@@ -489,31 +489,40 @@ end
 function container(chip2,chip1,isize,col,x,y,rock,def)
 	local x1,y1,z1=local3DPos2(_X(chip1),_Y(chip1),_Z(chip1),chip2)
 	_SETCOLOR(tonumber("FF00",16))
-	local x2=hudData.x
-	local y2=hudData.y
-	if rock==2 then
-		_SETCOLOR(tonumber("FF0000",16))
-		x2=x
-		y2=y
-	elseif rock==1 then
-		x2=hikeolib.ang(x2,x,0.01)
-		y2=hikeolib.ang(y2,y,0.01)
-		hudData.x=x2
-		hudData.y=y2
-		if x2==x and y2==y then
-			hudData.rock=2
+	if rock==1 then
+		local x2=hudData.x
+		local y2=hudData.y
+		if hudData.rock~=2 then
+			hudData.rock=rock
+		end
+		if hudData.rock==2 then
+			_SETCOLOR(tonumber("FF0000",16))
+			x2=x
+			y2=y
+		elseif hudData.rock==1 then
+			x2=hikeolib.ang(x2,x,0.01)
+			y2=hikeolib.ang(y2,y,0.01)
+			hudData.x=x2
+			hudData.y=y2
+			if x2==x and y2==y then
+				hudData.rock=2
+			end
+		end
+		localmove3D(x1+x2+isize,y1+y2,z1,chip2)
+		for i=0,360,30 do
+			k=math.rad(i)
+			localline3D(x1+x2+isize*math.cos(k),y1+y2+isize*math.sin(k),z1,chip2)
 		end
 	end
-	localmove3D(x1+x2+isize,y1+y2,z1,chip2)
-	for i=0,360,30 do
-		k=math.rad(i)
-		localline3D(x1+x2+isize*math.cos(k),y1+y2+isize*math.sin(k),z1,chip2)
+	if hudData.rock==2 then
+		--_SETCOLOR(tonumber("FF0000",16))
 	end
 	localmove3D(x1+x+isize,y1+y+isize,z1,chip2)
 	localline3D(x1+x-isize,y1+y+isize,z1,chip2)
 	localline3D(x1+x-isize,y1+y-isize,z1,chip2)
 	localline3D(x1+x+isize,y1+y-isize,z1,chip2)
 	localline3D(x1+x+isize,y1+y+isize,z1,chip2)
+	--_SETCOLOR(tonumber("FF00",16))
 end
 
 function reticle(chip2,chip1,isize,col,x,y,range,def)
